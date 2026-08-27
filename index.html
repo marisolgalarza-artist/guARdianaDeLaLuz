@@ -4,86 +4,49 @@
 <head>
   <meta charset="UTF-8">
   <title>GUARDIANA DE LA LUZ - AR</title>
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
+  <!-- MindAR para A-Frame (CDN Oficial) -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 </head>
 
-<body style="margin:0; overflow:hidden;">
+<body style="margin: 0; overflow: hidden;">
 
-<a-scene mindar-image="imageTargetSrc: ./target.mind;"
-         vr-mode-ui="enabled: false"
-         device-orientation-permission-ui="enabled: false">
+  <a-scene 
+    mindar-image="imageTargetSrc: ./target.mind;" 
+    color-space="sRGB" 
+    renderer="colorManagement: true, physicallyCorrectLights" 
+    vr-mode-ui="enabled: false" 
+    device-orientation-permission-ui="enabled: false">
 
+    <!-- RECURSOS -->
+    <a-assets>
+      <img id="luzImg" src="luz.webp">
+    </a-assets>
 
-  <!-- RECURSOS -->
-  <a-assets>
+    <!-- CÁMARA DE AR -->
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <img
-      id="luzImg"
-      src="luz.webp">
+    <!-- OBJETIVO (TARGET 0) -->
+    <a-entity mindar-image-target="targetIndex: 0">
 
-  </a-assets>
+      <!-- LUZ SOBRE LA ESFERA -->
+      <a-plane 
+        src="#luzImg"
+        material="transparent: true; shader: flat; side: double; alphaTest: 0.5"
+        position="0 -0.05 0.1"
+        width="0.45" 
+        height="0.45"
+        animation__scale="property: scale; to: 1.12 1.12 1; dir: alternate; dur: 1200; loop: true; easing: easeInOutSine"
+        animation__float="property: position; to: 0 -0.03 0.1; dir: alternate; dur: 1800; loop: true; easing: easeInOutSine">
+      </a-plane>
 
+    </a-entity>
 
-  <!-- CÁMARA -->
-  <a-camera
-    position="0 0 0"
-    look-controls="enabled:false">
-  </a-camera>
-
-
-  <!-- PINTURA -->
-  <a-entity
-    id="target"
-    mindar-image-target="targetIndex: 0">
-
-
-    <!-- LUZ SOBRE LA ESFERA -->
-
-    <a-plane
-      src="#luzImg"
-
-      material="
-        transparent: true;
-        shader: flat;
-        side: double;
-        alphaTest: 0.5
-      "
-
-      position="0 -0.05 0.1"
-
-      width="0.45"
-      height="0.45"
-
-      animation__scale="
-        property: scale;
-        to: 1.12 1.12 1;
-        dir: alternate;
-        dur: 1200;
-        loop: true;
-        easing: easeInOutSine
-      "
-
-      animation__float="
-        property: position;
-        to: 0 -0.03 0.1;
-        dir: alternate;
-        dur: 1800;
-        loop: true;
-        easing: easeInOutSine
-      ">
-
-    </a-plane>
-
-
-  </a-entity>
-
-</a-scene>
+  </a-scene>
 
 </body>
 </html>
