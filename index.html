@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,8 +10,34 @@
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-  <!-- MindAR para A-Frame (CDN Oficial) -->
+  <!-- MindAR para A-Frame -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <!-- Componente para controlar el video -->
+  <script>
+    AFRAME.registerComponent('video-control', {
+      init: function () {
+        const video = document.querySelector('#videoLuz');
+
+        // Intentar reproducir automáticamente
+        video.play().catch(() => {
+          console.log("El navegador espera una interacción del usuario.");
+        });
+
+        // Cuando MindAR encuentra el target
+        this.el.addEventListener('targetFound', () => {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        });
+
+        // Cuando se pierde el target
+        this.el.addEventListener('targetLost', () => {
+          video.pause();
+        });
+      }
+    });
+  </script>
+
 </head>
 
 <body style="margin: 0; overflow: hidden;">
@@ -24,24 +51,61 @@
 
     <!-- RECURSOS -->
     <a-assets>
-      <img id="luzImg" src="luz.webp">
+
+      <!-- VIDEO TRANSPARENTE -->
+      <video
+        id="videoLuz"
+        src="./videotransparente.webm"
+        autoplay
+        loop
+        muted
+        playsinline
+        crossorigin="anonymous">
+      </video>
+
     </a-assets>
 
+
     <!-- CÁMARA DE AR -->
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera 
+      position="0 0 0" 
+      look-controls="enabled: false">
+    </a-camera>
+
 
     <!-- OBJETIVO (TARGET 0) -->
-    <a-entity mindar-image-target="targetIndex: 0">
+    <a-entity 
+      mindar-image-target="targetIndex: 0"
+      video-control>
 
-      <!-- LUZ SOBRE LA ESFERA -->
-      <a-plane 
-        src="#luzImg"
-        material="transparent: true; shader: flat; side: double; alphaTest: 0.5"
+      <!-- VIDEO TRANSPARENTE -->
+      <a-plane
+        src="#videoLuz"
         position="0 -0.05 0.1"
-        width="0.45" 
+        width="0.45"
         height="0.45"
-        animation__scale="property: scale; to: 1.12 1.12 1; dir: alternate; dur: 1200; loop: true; easing: easeInOutSine"
-        animation__float="property: position; to: 0 -0.03 0.1; dir: alternate; dur: 1800; loop: true; easing: easeInOutSine">
+        material="
+          shader: flat;
+          transparent: true;
+          alphaTest: 0.01;
+          side: double;
+        "
+        animation__scale="
+          property: scale;
+          to: 1.12 1.12 1;
+          dir: alternate;
+          dur: 1200;
+          loop: true;
+          easing: easeInOutSine
+        "
+        animation__float="
+          property: position;
+          to: 0 -0.03 0.1;
+          dir: alternate;
+          dur: 1800;
+          loop: true;
+          easing: easeInOutSine
+        ">
       </a-plane>
 
     </a-entity>
@@ -50,3 +114,4 @@
 
 </body>
 </html>
+```
