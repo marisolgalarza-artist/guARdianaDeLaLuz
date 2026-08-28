@@ -74,37 +74,37 @@
       video-control>
 
       <!-- VIDEO TRANSPARENTE (MUCHO MÁS PEQUEÑO) -->
-      <a-plane
-        src="#videoLuz"
-        position="0 0 0.1"
-        width="1"
-        height="1"
-        scale="0.7 0.7 0.7"
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-        "
-        animation__scale="
-          property: scale;
-          from: 0.7 0.7 0.7;
-          to: 0.85 0.85 0.85;
-          dir: alternate;
-          dur: 1200;
-          loop: true;
-          easing: easeInOutSine
-        "
-        animation__float="
-          property: position;
-          from: 0 0 0.1;
-          to: 0 0.02 0.1;
-          dir: alternate;
-          dur: 1800;
-          loop: true;
-          easing: easeInOutSine
-        ">
-      </a-plane>
+     <a-plane
+      src="#videoLuz"
+      position="0 0 0.05"
+      width="1.5"
+      height="1.5"
+      scale="1 1 1"
+      material="
+        shader: flat;
+        transparent: true;
+        alphaTest: 0.01;
+        side: double;
+      "
+      animation__scale="
+        property: scale;
+        from: 1 1 1;
+        to: 1.15 1.15 1.15;
+        dir: alternate;
+        dur: 1200;
+        loop: true;
+        easing: easeInOutSine
+      "
+      animation__float="
+        property: position;
+        from: 0 0 0.05;
+        to: 0 0.05 0.05;
+        dir: alternate;
+        dur: 1800;
+        loop: true;
+        easing: easeInOutSine
+      ">
+    </a-plane>
 
     </a-entity>
 
