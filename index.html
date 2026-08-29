@@ -3,167 +3,127 @@
 
 <head>
   <meta charset="UTF-8">
-
   <title>GUARDIANA DE LA LUZ - AR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-  <!-- A-FRAME -->
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-  <!-- MINDAR -->
+  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <!-- Control del video -->
+  <script>
+    AFRAME.registerComponent('video-control', {
+
+      init: function () {
+
+        const video = document.querySelector('#videoLuz');
+
+        // Cuando se detecta la pintura
+        this.el.addEventListener('targetFound', () => {
+
+          console.log("Pintura detectada");
+
+          video.currentTime = 0;
+
+          video.play().catch(() => {
+            console.log("El navegador necesita interacción.");
+          });
+
+        });
+
+        // Cuando se pierde la pintura
+        this.el.addEventListener('targetLost', () => {
+
+          console.log("Pintura perdida");
+
+          video.pause();
+
+        });
+
+      }
+
+    });
+  </script>
 
 </head>
 
-
 <body style="margin:0; overflow:hidden;">
 
+  <a-scene
 
-<a-scene
+    mindar-image="imageTargetSrc: ./target.mind;"
 
-  mindar-image="imageTargetSrc: ./target.mind;"
+    color-space="sRGB"
 
-  color-space="sRGB"
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights
+    "
 
-  renderer="
-    colorManagement: true;
-    physicallyCorrectLights
-  "
+    vr-mode-ui="enabled: false"
 
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="enabled: false">
-
-
-  <!-- ========================= -->
-  <!-- RECURSOS -->
-  <!-- ========================= -->
-
-  <a-assets>
-
-    <!-- VIDEO DE LA ESFERA -->
-
-    <video
-      id="videoLuz"
-      src="./video_ping_pong.webm"
-      loop
-      muted
-      playsinline
-      crossorigin="anonymous">
-    </video>
-
-  </a-assets>
+    device-orientation-permission-ui="enabled: false">
 
 
-  <!-- ========================= -->
-  <!-- CÁMARA -->
-  <!-- ========================= -->
+    <!-- RECURSOS -->
 
-  <a-camera
+    <a-assets>
 
-    position="0 0 0"
+      <video
+        id="videoLuz"
+        src="./video_ping_pong.webm"
+        loop
+        muted
+        playsinline
+        crossorigin="anonymous">
+      </video>
 
-    look-controls="enabled:false">
-
-  </a-camera>
-
-
-  <!-- ========================= -->
-  <!-- PINTURA -->
-  <!-- ========================= -->
-
-  <a-entity
-
-    id="target"
-
-    mindar-image-target="targetIndex: 0">
+    </a-assets>
 
 
-    <!-- ========================= -->
-    <!-- VIDEO DE LA ESFERA -->
-    <!-- ========================= -->
+    <!-- CÁMARA -->
 
-    <a-plane
-
-      id="videoPlane"
-
-      src="#videoLuz"
-
-      position="0 0 0.05"
-
-      width="1"
-
-      height="1"
-
-      material="
-        shader: flat;
-        transparent: true;
-        alphaTest: 0.01;
-        side: double;
-      ">
-
-    </a-plane>
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled:false">
+    </a-camera>
 
 
-    <!-- ========================= -->
-    <!-- CONTENEDOR DE PARTÍCULAS -->
-    <!-- ========================= -->
+    <!-- PINTURA -->
 
     <a-entity
-      id="particulas">
+      id="target"
+      mindar-image-target="targetIndex: 0"
+      video-control>
+
+
+      <!-- VIDEO DE LA ESFERA -->
+
+      <a-plane
+
+        src="#videoLuz"
+
+        position="0 0 0.05"
+
+        width="1"
+        height="1"
+
+        material="
+          shader: flat;
+          transparent: true;
+          alphaTest: 0.01;
+          side: double;
+        ">
+
+      </a-plane>
+
 
     </a-entity>
 
 
-  </a-entity>
-
-
-</a-scene>
-
-
-<script>
-
-
-/* =========================================
-   VIDEO
-========================================= */
-
-const target = document.querySelector("#target");
-
-const video = document.querySelector("#videoLuz");
-
-
-/* =========================================
-   CUANDO SE PIERDE LA PINTURA
-========================================= */
-
-target.addEventListener(
-  "targetLost",
-  () => {
-
-    console.log(
-      "Pintura perdida"
-    );
-
-
-    /*
-      DETENER VIDEO
-    */
-
-    video.pause();
-
-
-
-  }
-);
-
-
-</script>
-
+  </a-scene>
 
 </body>
-
 </html>
