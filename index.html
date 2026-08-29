@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
-  <title> La guARdiana de la luz - AR</title>
+  <title>La guARdiana de la luz - AR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- A-Frame -->
@@ -12,114 +13,37 @@
   <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-  <!-- Control del video -->
-  <script>
-    AFRAME.registerComponent('video-control', {
-
-      init: function () {
-
-        const video = document.querySelector('#videoLuz');
-
-        // Cuando se detecta la pintura
-        this.el.addEventListener('targetFound', () => {
-
-          console.log("Pintura detectada");
-
-          video.currentTime = 0;
-
-          video.play().catch(() => {
-            console.log("El navegador necesita interacción.");
-          });
-
-        });
-
-        // Cuando se pierde la pintura
-        this.el.addEventListener('targetLost', () => {
-
-          console.log("Pintura perdida");
-
-          video.pause();
-
-        });
-
-      }
-
-    });
-  </script>
-
 </head>
 
 <body style="margin:0; overflow:hidden;">
 
   <a-scene
-
     mindar-image="imageTargetSrc: ./target.mind;"
-
     color-space="sRGB"
-
-    renderer="
-      colorManagement: true;
-      physicallyCorrectLights
-    "
-
+    renderer="colorManagement: true"
     vr-mode-ui="enabled: false"
-
     device-orientation-permission-ui="enabled: false">
-
-
-    <!-- RECURSOS -->
-
-    <a-assets>
-
-      <video
-        id="videoLuz"
-        src="./video_ping_pong.webm"
-        loop
-        muted
-        playsinline
-        crossorigin="anonymous">
-      </video>
-
-    </a-assets>
-
-
-    <!-- CÁMARA -->
 
     <a-camera
       position="0 0 0"
-      look-controls="enabled:false">
+      look-controls="enabled: false">
     </a-camera>
 
-
-    <!-- PINTURA -->
-
+    <!-- OBJETIVO -->
     <a-entity
-      id="target"
-      mindar-image-target="targetIndex: 0"
-      video-control>
+      mindar-image-target="targetIndex: 0">
 
+      <!-- Esfera de prueba -->
+      <a-sphere
+        position="0 0 0.2"
+        radius="0.15"
+        color="#FF0000">
+      </a-sphere>
 
-      <!-- VIDEO DE LA ESFERA -->
-
-      <a-plane
-
-        src="#videoLuz"
-
-        position="0 0 0.05"
-
-        width="1"
-        height="1"
-
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-        ">
-
-      </a-plane>
     </a-entity>
+
   </a-scene>
 
 </body>
 </html>
+```
