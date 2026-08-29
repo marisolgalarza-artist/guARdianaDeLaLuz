@@ -4,25 +4,54 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Prueba cámara</title>
+  <title>Prueba de cámara</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+    }
 
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
 </head>
 
-<body style="margin:0;">
+<body>
 
-  <a-scene
-    vr-mode-ui="enabled: false">
+  <video id="camera" autoplay playsinline></video>
 
-    <a-camera
-      position="0 0 0"
-      look-controls="enabled: false">
-    </a-camera>
+  <script>
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "environment"
+      },
+      audio: false
+    })
+    .then(function(stream) {
 
-  </a-scene>
+      console.log("CÁMARA ACTIVADA");
+
+      document.getElementById("camera").srcObject = stream;
+
+    })
+    .catch(function(error) {
+
+      console.error("ERROR DE CÁMARA:", error);
+
+      alert("No se pudo acceder a la cámara: " + error.name);
+
+    });
+  </script>
 
 </body>
 
 </html>
+
