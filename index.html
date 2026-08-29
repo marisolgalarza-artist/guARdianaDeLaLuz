@@ -1,48 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
-  <title>La guARdiana de la luz - AR</title>
+  <title>Prueba cámara</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-
-  <!-- MindAR -->
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 </head>
 
-<body style="margin:0; overflow:hidden;">
+<body style="margin:0;">
 
   <a-scene
-    mindar-image="imageTargetSrc: ./target.mind;"
-    color-space="sRGB"
-    renderer="colorManagement: true"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false">
+    vr-mode-ui="enabled: false">
 
     <a-camera
       position="0 0 0"
       look-controls="enabled: false">
     </a-camera>
 
-    <!-- OBJETIVO -->
-    <a-entity
-      mindar-image-target="targetIndex: 0">
-
-      <!-- Esfera de prueba -->
-      <a-sphere
-        position="0 0 0.2"
-        radius="0.15"
-        color="#FF0000">
-      </a-sphere>
-
-    </a-entity>
-
   </a-scene>
 
 </body>
+
 </html>
-```
