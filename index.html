@@ -3,148 +3,423 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>GUARDIANA DE LA LUZ - AR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- A-Frame -->
+  <title>GUARDIANA DE LA LUZ - AR</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-  <!-- MindAR -->
+  <!-- MINDAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/gh/IdeaSpaceVR/aframe-particle-system-component@1.1.0/dist/aframe-particle-system-component.min.js"></script>
-
-  <!-- Control del video -->
-  <script>
-    AFRAME.registerComponent('video-control', {
-
-      init: function () {
-
-        const video = document.querySelector('#videoLuz');
-
-        // Cuando se detecta la pintura
-        this.el.addEventListener('targetFound', () => {
-
-          console.log("Pintura detectada");
-
-          video.currentTime = 0;
-
-          video.play().catch(() => {
-            console.log("El navegador necesita interacción.");
-          });
-
-        });
-
-        // Cuando se pierde la pintura
-        this.el.addEventListener('targetLost', () => {
-
-          console.log("Pintura perdida");
-
-          video.pause();
-
-        });
-
-      }
-
-    });
-  </script>
 
 </head>
 
+
 <body style="margin:0; overflow:hidden;">
 
-  <a-scene
 
-    mindar-image="imageTargetSrc: ./target.mind;"
+<a-scene
 
-    color-space="sRGB"
+  mindar-image="imageTargetSrc: ./target.mind;"
 
-    renderer="
-      colorManagement: true;
-      physicallyCorrectLights
-    "
+  color-space="sRGB"
 
-    vr-mode-ui="enabled: false"
+  renderer="
+    colorManagement: true;
+    physicallyCorrectLights
+  "
 
-    device-orientation-permission-ui="enabled: false">
+  vr-mode-ui="enabled: false"
 
-
-    <!-- RECURSOS -->
-
-    <a-assets>
-
-      <video
-        id="videoLuz"
-        src="./video_ping_pong.webm"
-        loop
-        muted
-        playsinline
-        crossorigin="anonymous">
-      </video>
-
-    </a-assets>
+  device-orientation-permission-ui="enabled: false">
 
 
-    <!-- CÁMARA -->
+  <!-- ========================= -->
+  <!-- RECURSOS -->
+  <!-- ========================= -->
 
-    <a-camera
-      position="0 0 0"
-      look-controls="enabled:false">
-    </a-camera>
+  <a-assets>
+
+    <!-- VIDEO DE LA ESFERA -->
+
+    <video
+      id="videoLuz"
+      src="./video_ping_pong.webm"
+      loop
+      muted
+      playsinline
+      crossorigin="anonymous">
+    </video>
+
+  </a-assets>
 
 
-    <!-- PINTURA -->
+  <!-- ========================= -->
+  <!-- CÁMARA -->
+  <!-- ========================= -->
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled:false">
+
+  </a-camera>
+
+
+  <!-- ========================= -->
+  <!-- PINTURA -->
+  <!-- ========================= -->
+
+  <a-entity
+
+    id="target"
+
+    mindar-image-target="targetIndex: 0">
+
+
+    <!-- ========================= -->
+    <!-- VIDEO DE LA ESFERA -->
+    <!-- ========================= -->
+
+    <a-plane
+
+      id="videoPlane"
+
+      src="#videoLuz"
+
+      position="0 0 0.05"
+
+      width="1.7"
+
+      height="1.7"
+
+      material="
+        shader: flat;
+        transparent: true;
+        alphaTest: 0.01;
+        side: double;
+      ">
+
+    </a-plane>
+
+
+    <!-- ========================= -->
+    <!-- CONTENEDOR DE PARTÍCULAS -->
+    <!-- ========================= -->
 
     <a-entity
-      id="target"
-      mindar-image-target="targetIndex: 0"
-      video-control>
-
-
-      <!-- VIDEO DE LA ESFERA -->
-
-      <a-plane
-
-        src="#videoLuz"
-
-        position="0 0 0.05"
-
-        width="1"
-        height="1"
-
-        material="
-          shader: flat;
-          transparent: true;
-          alphaTest: 0.01;
-          side: double;
-        ">
-
-      </a-plane>
-
-            <!-- CAPA DE PARTÍCULAS DE LUZ -->
-      <a-entity
-        position="0 0 0.08"
-        particle-system="
-          preset: dust;
-          particleCount: 80;
-          color: #FFD76A;
-          size: 0.08;
-          velocityValue: 0 0.15 0;
-          velocitySpread: 0.08 0.08 0.02;
-          accelerationValue: 0 0.02 0;
-          accelerationSpread: 0.03 0.03 0;
-          particleOpacity: 0.8;
-          blending: additive;
-          duration: 3;
-          maxAge: 3;
-          randomize: true;
-        ">
-      </a-entity>
+      id="particulas">
 
     </a-entity>
 
 
-  </a-scene>
+  </a-entity>
+
+
+</a-scene>
+
+
+<script>
+
+
+/* =========================================
+   VIDEO
+========================================= */
+
+const target = document.querySelector("#target");
+
+const video = document.querySelector("#videoLuz");
+
+
+/* =========================================
+   CONTENEDOR DE PARTÍCULAS
+========================================= */
+
+const particulas =
+  document.querySelector("#particulas");
+
+
+/* =========================================
+   CREAR PARTÍCULAS
+========================================= */
+
+function crearParticula() {
+
+
+  const p = document.createElement("a-sphere");
+
+
+  /*
+    POSICIÓN INICIAL
+
+    Las partículas nacen
+    alrededor de la esfera.
+  */
+
+  const x =
+    (Math.random() - 0.5) * 0.35;
+
+  const y =
+    (Math.random() - 0.5) * 0.20;
+
+  const z = 0.12;
+
+
+  p.setAttribute(
+    "position",
+    `${x} ${y} ${z}`
+  );
+
+
+  /*
+    TAMAÑO
+
+    Muy pequeño para que
+    parezcan destellos.
+  */
+
+  const tamaño =
+    0.008 + Math.random() * 0.015;
+
+
+  p.setAttribute(
+    "radius",
+    tamaño
+  );
+
+
+  /*
+    MATERIAL DORADO
+  */
+
+  p.setAttribute(
+    "material",
+    `
+      color: #FFD76A;
+      emissive: #FFD76A;
+      emissiveIntensity: 2;
+      shader: standard;
+      transparent: true;
+      opacity: 0.85;
+    `
+  );
+
+
+  /*
+    DURACIÓN
+
+    Cada partícula tarda
+    entre 1.5 y 3 segundos.
+  */
+
+  const duracion =
+    1500 + Math.random() * 1500;
+
+
+  /*
+    ALTURA
+
+    Sube suavemente.
+  */
+
+  const altura =
+    y + 0.25 + Math.random() * 0.20;
+
+
+  /*
+    MOVIMIENTO VERTICAL
+  */
+
+  p.setAttribute(
+    "animation__subir",
+    `
+      property: position;
+      to: ${x} ${altura} ${z};
+      dur: ${duracion};
+      easing: easeOutQuad;
+    `
+  );
+
+
+  /*
+    DESAPARECER
+  */
+
+  p.setAttribute(
+    "animation__desaparecer",
+    `
+      property: material.opacity;
+      from: 0.85;
+      to: 0;
+      dur: ${duracion};
+      easing: easeInQuad;
+    `
+  );
+
+
+  particulas.appendChild(p);
+
+
+  /*
+    ELIMINAR PARTÍCULA
+    CUANDO TERMINA
+  */
+
+  setTimeout(() => {
+
+    if (p.parentNode) {
+
+      p.parentNode.removeChild(p);
+
+    }
+
+  }, duracion + 100);
+
+}
+
+
+/* =========================================
+   CREAR GRUPO DE PARTÍCULAS
+========================================= */
+
+function iniciarParticulas() {
+
+  /*
+    Creamos pocas partículas
+    para que el efecto sea elegante.
+  */
+
+  for (let i = 0; i < 20; i++) {
+
+    setTimeout(() => {
+
+      crearParticula();
+
+    }, i * 120);
+
+  }
+
+
+  /*
+    Después seguimos generando
+    nuevas partículas.
+  */
+
+  window.intervaloParticulas =
+    setInterval(() => {
+
+      crearParticula();
+
+    }, 350);
+
+}
+
+
+/* =========================================
+   DETENER PARTÍCULAS
+========================================= */
+
+function detenerParticulas() {
+
+  clearInterval(
+    window.intervaloParticulas
+  );
+
+
+  /*
+    Eliminamos las partículas
+    existentes.
+  */
+
+  while (
+    particulas.firstChild
+  ) {
+
+    particulas.removeChild(
+      particulas.firstChild
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   CUANDO SE ENCUENTRA LA PINTURA
+========================================= */
+
+target.addEventListener(
+  "targetFound",
+  () => {
+
+    console.log(
+      "Pintura encontrada"
+    );
+
+
+    /*
+      REINICIAR VIDEO
+    */
+
+    video.currentTime = 0;
+
+    video.play().catch(() => {
+
+      console.log(
+        "El navegador necesita interacción."
+      );
+
+    });
+
+
+    /*
+      INICIAR PARTÍCULAS
+    */
+
+    iniciarParticulas();
+
+  }
+);
+
+
+/* =========================================
+   CUANDO SE PIERDE LA PINTURA
+========================================= */
+
+target.addEventListener(
+  "targetLost",
+  () => {
+
+    console.log(
+      "Pintura perdida"
+    );
+
+
+    /*
+      DETENER VIDEO
+    */
+
+    video.pause();
+
+
+    /*
+      DETENER PARTÍCULAS
+    */
+
+    detenerParticulas();
+
+  }
+);
+
+
+</script>
+
 
 </body>
+
 </html>
